@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:22.04
 
 ENV MYSQLDUMP_OPTIONS --quick --no-create-db --add-drop-table --add-locks --allow-keywords --quote-names --disable-keys --single-transaction --create-options --comments --net_buffer_length=16384
 ENV MYSQLDUMP_DATABASE **None**
@@ -15,17 +15,16 @@ ENV S3_S3V4 no
 ENV S3_PREFIX 'backup'
 ENV S3_FILENAME **None**
 ENV MULTI_DATABASES no
+ENV SCHEDULE **None**
 
-# install mysqldump, pip, awscli
+# install mysqldump, awscli
 RUN apt-get update && \
-	apt-get install -y mysql-client python3 python3-pip && \
-	pip3 install awscli && \
-	apt-get autoremove -y && \
-	apt-get remove -y python3-pip && \
-	apt-get clean && \
+	apt-get install -y mysql-client awscli curl && \
 	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-ADD run.sh backup.sh /
+RUN curl -L https://github.com/odise/go-cron/releases/download/v0.0.7/go-cron-linux.gz | zcat > /usr/local/bin/go-cron && chmod +x /usr/local/bin/go-cron
+
+ADD entrypoint.sh backup.sh /
 RUN chmod +x /run.sh /backup.sh
 
-CMD ["sh", "/run.sh"]
+CMD ["sh", "/entrypoint.sh"]
