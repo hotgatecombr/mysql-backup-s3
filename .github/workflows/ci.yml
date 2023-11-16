@@ -26,3 +26,6 @@ jobs:
         with:
           push: true
           tags: f213/mysql-backup-s3:latest
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
