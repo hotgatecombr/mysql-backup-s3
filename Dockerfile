@@ -1,4 +1,10 @@
-FROM ubuntu:22.04
+FROM alpine:3.18.4
+LABEL maintainer="Fedor Borshev <fedor@borshev.com>"
+
+RUN apk update && \
+    apk --no-cache add dumb-init mysql-client curl aws-cli
+
+RUN curl -L https://github.com/odise/go-cron/releases/download/v0.0.7/go-cron-linux.gz | zcat > /usr/local/bin/go-cron && chmod +x /usr/local/bin/go-cron
 
 ENV MYSQLDUMP_OPTIONS --quick --no-create-db --add-drop-table --add-locks --allow-keywords --quote-names --disable-keys --single-transaction --create-options --comments --net_buffer_length=16384
 ENV MYSQLDUMP_DATABASE **None**
@@ -17,14 +23,8 @@ ENV S3_FILENAME **None**
 ENV MULTI_DATABASES no
 ENV SCHEDULE **None**
 
-# install mysqldump, awscli
-RUN apt-get update && \
-	apt-get install -y mysql-client awscli curl && \
-	rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-RUN curl -L https://github.com/odise/go-cron/releases/download/v0.0.7/go-cron-linux.gz | zcat > /usr/local/bin/go-cron && chmod +x /usr/local/bin/go-cron
 
 ADD entrypoint.sh backup.sh /
-RUN chmod +x /run.sh /backup.sh
 
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["sh", "/entrypoint.sh"]
