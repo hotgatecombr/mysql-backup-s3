@@ -2,10 +2,8 @@ FROM alpine:3.18.4
 LABEL maintainer="Fedor Borshev <fedor@borshev.com>"
 
 RUN apk update && \
-    apk --no-cache add dump-init curl aws-cli && \
+    apk --no-cache add dumb-init curl aws-cli supercronic && \
     apk --no-cache add mysql-client mariadb-connector-c
-
-RUN curl -L https://github.com/odise/go-cron/releases/download/v0.0.7/go-cron-linux.gz | zcat > /usr/local/bin/go-cron && chmod +x /usr/local/bin/go-cron
 
 ENV MYSQLDUMP_OPTIONS --quick --no-create-db --add-drop-table --add-locks --allow-keywords --quote-names --disable-keys --single-transaction --create-options --comments --net_buffer_length=16384
 ENV MYSQLDUMP_DATABASE **None**
@@ -24,8 +22,9 @@ ENV S3_FILENAME **None**
 ENV MULTI_DATABASES no
 ENV SCHEDULE **None**
 
-
 ADD entrypoint.sh backup.sh /
+
+HEALTHCHECK CMD curl --fail http://localhost:9746/health || exit 1
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["sh", "/entrypoint.sh"]
