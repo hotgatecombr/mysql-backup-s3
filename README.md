@@ -31,6 +31,7 @@ services:
 
 ## Environment variables
 - `SCHEDULE` crontab-like syntax to schedule your backups
+- `SUCCESS_WEBHOOK` url to notify on success
 - `MYSQLDUMP_OPTIONS` mysqldump options (default: --quote-names --quick --add-drop-table --add-locks --allow-keywords --disable-keys --extended-insert --single-transaction --create-options --comments --net_buffer_length=16384)
 - `MYSQLDUMP_DATABASE` list of databases you want to backup (default: --all-databases)
 - `MYSQL_HOST` the mysql host *required*

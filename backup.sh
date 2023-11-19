@@ -118,3 +118,8 @@ else
 fi
 
 echo "SQL backup finished"
+
+if [ "${SUCCESS_WEBHOOK}" != "**None**" ]; then
+  echo "Notifying $SUCCESS_WEBHOOK"
+  curl -m 10 --retry 5 $SUCCESS_WEBHOOK
+fi

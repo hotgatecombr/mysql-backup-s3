@@ -21,6 +21,7 @@ ENV S3_PREFIX 'backup'
 ENV S3_FILENAME **None**
 ENV MULTI_DATABASES no
 ENV SCHEDULE **None**
+ENV SUCCESS_WEBHOOK **None**
 
 ADD entrypoint.sh backup.sh /
 
