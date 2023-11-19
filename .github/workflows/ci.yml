@@ -1,6 +1,7 @@
 name: Release
 on:
-  workflow_dispatch:
+  release:
+    types: [published]
 
 jobs:
   build:
@@ -21,11 +22,19 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
+      - name: Generate image identifier
+        id: name
+        uses: ASzc/change-string-case-action@v5
+        with:
+          string: ${{ github.repository }}
+
       - name: Build
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: f213/mysql-backup-s3:latest
+          tags: |
+            ${{ steps.name.outputs.lowercase }}:latest
+            ${{ steps.name.outputs.lowercase }}:${{ github.event.release.name }}
           platforms: linux/amd64,linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max
