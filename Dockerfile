@@ -2,7 +2,8 @@ FROM alpine:3.18.4
 LABEL maintainer="Fedor Borshev <fedor@borshev.com>"
 
 RUN apk update && \
-    apk --no-cache add dumb-init mysql-client curl aws-cli
+    apk --no-cache add dump-init curl aws-cli && \
+    apk --no-cache add mysql-client mariadb-connector-c
 
 RUN curl -L https://github.com/odise/go-cron/releases/download/v0.0.7/go-cron-linux.gz | zcat > /usr/local/bin/go-cron && chmod +x /usr/local/bin/go-cron
 
