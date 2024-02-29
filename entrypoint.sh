@@ -11,5 +11,4 @@ if [ "${SCHEDULE}" = "**None**" ]; then
   exit 127
 else
   echo "${SCHEDULE} /bin/sh /backup.sh" > /etc/crontab.backup
-  exec supercronic -debug -prometheus-listen-address 0.0.0.0 /etc/crontab.backup
 fi
