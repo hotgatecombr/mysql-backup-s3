@@ -2,7 +2,7 @@ FROM alpine:3.18.4
 LABEL maintainer="Fedor Borshev <fedor@borshev.com>"
 
 RUN apk update && \
-    apk --no-cache add dumb-init curl aws-cli && \
+    apk --no-cache add dumb-init curl aws-cli supercronic && \
     apk --no-cache add mysql-client mariadb-connector-c
 
 ENV MYSQLDUMP_OPTIONS --quick --no-create-db --add-drop-table --add-locks --allow-keywords --quote-names --disable-keys --single-transaction --create-options --comments --net_buffer_length=16384
